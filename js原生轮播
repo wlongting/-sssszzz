@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>轮播图</title>
+	<style>
+		*{
+			margin:0;
+			padding:0;
+		}
+		.big{
+			width: 500px;
+			height: 300px;
+			position: relative;
+			margin:100px auto;
+			overflow: hidden;
+		}
+		.small{
+			width: 5500px;
+			height: 300px;
+			position: absolute;
+		}
+		img{
+			width: 500px;
+			height: 300px;
+			display: block;
+			border:0;
+			float: left;
+		}
+		.circle{
+			width: 250px;
+			height: 30px;
+			line-height: 30px;
+			display: flex;
+			justify-content: space-around;
+			position: absolute;
+			left: 50%;
+			margin-left: -100px;
+			bottom:10px;
+		}
+		.circle span{
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			border:1px solid #000;
+		}
+		.active{
+			background: green;
+		}
+		.btn{
+			width: 40px;
+			height: 40px;
+			line-height: 40px;
+			text-align: center;
+			font-weight: bold;
+			font-size: 30px;
+			background: rgba(22,22,22,0.5);
+			position: absolute;
+			top:50%;
+			margin-top: -20px;
+		}
+		#prev{
+			left: 10px;
+		}
+		#next{
+			right: 10px;
+		}
+		.btn{
+			display: none;
+		}
+		.big:hover .btn{
+			display: block;
+		}
+	</style>
+</head>
+<body>
+	<div class="big">
+		<div class="small">
+			<img src="img/girl_1.jpg" alt="" style="display: block;">
+			<img src="img/girl_2.jpg" alt="">
+			<img src="img/girl_3.jpg" alt="">
+			<img src="img/girl_5.jpg" alt="">
+			<!-- 克隆一张 -->
+			<img src="img/girl_1.jpg" alt="">
+		</div>
+		<div class="circle">
+			<span class="active"></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+		<div id="prev" class="btn"><</div>
+		<div id="next" class="btn">></div>
+	</div>
+</body>
+<script>
+	//获取元素
+	//获取最大的div
+	var oBig = document.querySelector('.big');
+	// 获取包含轮播图片的div
+	var oSmall = document.querySelector('.small');
+	//获取轮播图片
+	var aImg = document.querySelectorAll('.small img');
+	//获取圆圈
+	var aCircle = document.querySelectorAll('.circle span');
+	//获取左按钮
+	var oPrev = document.querySelector('#prev');
+	//获取右按钮
+	var oNext = document.querySelector('#next');
+	
+	//声明一个下标变量
+	var index=0;//图的
+	var dot = 0;//圆的
+	//开启定时器进行自动轮播
+	var timer = setInterval(autoPlay,1000)
+	function autoPlay(){
+		index++;
+		if(index>aCircle.length){
+			index = 1;
+			oSmall.style.left = 0;
+		}
+		animate(oSmall,-index*500)
+		dot++;
+		if(dot>aCircle.length-1){
+			dot=0;//临界值
+		}
+		//遍历，先清空所有的 再赋值当前的
+		for(var i=0;i<aCircle.length;i++){
+			aCircle[i].className = '';
+		}
+		aCircle[dot].className = 'active';
+	}
+
+	
+	function animate(ele,target){
+		clearInterval(ele.timer);
+		var speed = target>ele.offsetLeft?10:-10;
+		ele.timer = setInterval(function(){
+			ele.style.left  = ele.offsetLeft + speed + 'px';
+		
+		//临界值判断
+		var val  = target - ele.offsetLeft;
+		if(Math.abs(val)<Math.abs(speed)){
+			ele.style.left = target + 'px';
+			clearInterval(ele.timer)
+		}
+	},10)
+	}
+</script>
+</html>
